@@ -1,28 +1,31 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
         File input = new File("2021/Day 3/input");
         System.out.println(input.getAbsolutePath());
 
-        List<Map<Character, Integer>> values = new ArrayList<>();
+        List<char[]> rawInputLines = new ArrayList<>();
+        List<Map<Character, Integer>> charAccordanceValues = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(input)) {
             while (scanner.hasNextLine()) {
                 char[] inputLine = scanner.nextLine().toCharArray();
+                rawInputLines.add(inputLine);
 
-                if (values.size() == 0)
+                if (charAccordanceValues.size() == 0)
                     for (int i = 0; i < inputLine.length; i++) {
-                        values.add(new HashMap<>());
+                        charAccordanceValues.add(new HashMap<>());
                     }
 
-                for (int i = 0; i < values.size(); i++) {
+                for (int i = 0; i < charAccordanceValues.size(); i++) {
                     if (inputLine[i] != '0' && inputLine[i] != '1')
                         continue;
 
-                    Map<Character, Integer> currentBitStates = values.get(i);
+                    Map<Character, Integer> currentBitStates = charAccordanceValues.get(i);
 
                     Integer currentCharCount = currentBitStates.get(inputLine[i]);
                     currentBitStates.put(
@@ -34,11 +37,11 @@ public class Main {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(values.toString());
+        System.out.println(charAccordanceValues.toString());
 
         StringBuilder mostSignificantBits = new StringBuilder();
         StringBuilder leastSignificantBits = new StringBuilder();
-        for (Map<Character, Integer> map : values) {
+        for (Map<Character, Integer> map : charAccordanceValues) {
             Integer totalTrue = map.get('1');
             Integer totalFalse = map.get('0');
 
@@ -68,14 +71,75 @@ public class Main {
 
         // Part two
         // Most common
-//        List<String> common
-//        for (Map<Character, Integer> map : values) {
-//
-//             Most common
-//
-//        }
+        List<char[]> mostCommonBitList = new ArrayList<>(rawInputLines);
+        List<char[]> mostCommonBitListFiltered = new ArrayList<>(rawInputLines);
 
 
+        for (int charIndex = 0; charIndex < mostCommonBitList.get(0).length; charIndex++) {
+            int totalTrue = 0;
+            int totalFalse = 0;
 
+            for (char[] bitInput : mostCommonBitList){
+                if (bitInput[charIndex] == '1') {
+                    totalTrue++;
+                }else{
+                    totalFalse++;
+                }
+            }
+
+            char mostCommonBit = totalTrue >= totalFalse ? '1' : '0';
+
+
+            for (char[] bitInput : mostCommonBitList) {
+                if (bitInput[charIndex] != mostCommonBit)
+                    mostCommonBitListFiltered.remove(bitInput);
+            }
+            if (mostCommonBitListFiltered.size() <= 1)
+                break;
+
+            mostCommonBitList = new ArrayList<>(mostCommonBitListFiltered);
+        }
+
+        // Least common
+        List<char[]> leastCommonBitList = new ArrayList<>(rawInputLines);
+        List<char[]> leastCommonBitListFiltered = new ArrayList<>(rawInputLines);
+
+
+        for (int charIndex = 0; charIndex < leastCommonBitList.get(0).length; charIndex++) {
+            int totalTrue = 0;
+            int totalFalse = 0;
+
+            for (char[] bitInput : leastCommonBitList){
+                if (bitInput[charIndex] == '1') {
+                    totalTrue++;
+                }else{
+                    totalFalse++;
+                }
+            }
+
+            char leastCommonBit = totalTrue >= totalFalse ? '0' : '1';
+
+
+            for (char[] bitInput : leastCommonBitList) {
+                if (bitInput[charIndex] != leastCommonBit)
+                    leastCommonBitListFiltered.remove(bitInput);
+            }
+            if (leastCommonBitListFiltered.size() <= 1)
+                break;
+
+            leastCommonBitList = new ArrayList<>(leastCommonBitListFiltered);
+        }
+
+
+        // Result
+        String filteredStringMostCommon = new String(mostCommonBitListFiltered.get(0));
+        System.out.printf("Most common: %s (%d)\n",
+                filteredStringMostCommon, Long.parseLong(filteredStringMostCommon, 2)
+        );
+
+        String filteredStringLeastCommon = new String(leastCommonBitListFiltered.get(0));
+        System.out.printf("Least common: %s (%d)\n",
+                filteredStringLeastCommon, Long.parseLong(filteredStringLeastCommon, 2)
+        );
     }
 }
