@@ -29,6 +29,10 @@ public class Main {
         // Start drawing numbers until one card wins
         List<Integer> drawnNumbers = new ArrayList<>();
         List<Card> cardsWithBingo = null;
+        Card firstCardToWin = null;
+        Integer drawFirstWin = 0;
+        Card lastWinningCard = null;
+        Integer drawFinalWin = 0;
 
         for (Integer number : drawList) {
             drawnNumbers.add(number);
@@ -36,24 +40,47 @@ public class Main {
                     .filter((card) -> card.hasBingo(drawnNumbers))
                     .toList();
 
-            if (cardsWithBingo.size() != 0)
+            if (cardsWithBingo.size() == 1 && firstCardToWin == null) {
+                firstCardToWin = cardsWithBingo.get(0);
+                drawFirstWin = number;
+            }
+
+            if (cardsWithBingo.size() + 1 >= cardList.size())
+                for (Card card : cardList) {
+                    if (cardsWithBingo.contains(card))
+                        continue;
+                    System.out.println(card);
+                    lastWinningCard = card;
+                    break;
+                }
+
+            if (cardsWithBingo.size() == cardList.size()) {
+                drawFinalWin = number;
                 break;
+            }
         }
 
         System.out.println("Drawn numbers: " + drawnNumbers);
 
-        if (cardsWithBingo == null)
+        if (cardsWithBingo == null || firstCardToWin == null)
             System.out.println("No card won :/");
 
-        List<Integer> unmarkedNumbersOfWinning = cardsWithBingo.get(0).getUnmarkedNumber(drawnNumbers);
+        List<Integer> unmarkedNumbersOfWinning = firstCardToWin.getUnmarkedNumber(drawnNumbers);
         System.out.println("CARD WON " + unmarkedNumbersOfWinning);
-        System.out.printf("Sum: %d\nLast call: %d\nTotalScore: %d",
+        System.out.printf("Sum: %d\nLast call: %d\nTotalScore: %d\n",
                 unmarkedNumbersOfWinning.stream().mapToInt(Integer::intValue).sum(),
-                drawnNumbers.get(drawnNumbers.size() - 1),
+                drawFirstWin,
                 unmarkedNumbersOfWinning.stream().mapToInt(Integer::intValue).sum()
                         * drawnNumbers.get(drawnNumbers.size() - 1)
         );
 
+        List<Integer> unmarkedNumbersOfFinalWin = lastWinningCard.getUnmarkedNumber(drawnNumbers);
+        System.out.printf("LozingSum: %d\nLastCallLoze: %d\nTotalScoreLoze: %d\n",
+                unmarkedNumbersOfFinalWin.stream().mapToInt(Integer::intValue).sum(),
+                drawFinalWin,
+                unmarkedNumbersOfFinalWin.stream().mapToInt(Integer::intValue).sum()
+                        * drawnNumbers.get(drawnNumbers.size() - 1)
+        );
     }
 
     public static void importDataFromFile(File inputFile) {
