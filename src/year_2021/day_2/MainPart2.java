@@ -1,3 +1,5 @@
+package year_2021.day_2;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -6,7 +8,7 @@ public class MainPart2 {
     public static void main(String[] args) {
         int horizontalPos = 0;
         int depth = 0;
-        File input = new File("2021/Day 2/input");
+        File input = new File("src/year_2021/day_2/input");
         System.out.println(input.getAbsolutePath());
 
         if (!input.exists()) {

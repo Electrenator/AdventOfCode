@@ -1,11 +1,12 @@
+package year_2021.day_3;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        File input = new File("2021/Day 3/input");
+        File input = new File("src/year_2021/day_3/input");
         System.out.println(input.getAbsolutePath());
 
         List<char[]> rawInputLines = new ArrayList<>();
