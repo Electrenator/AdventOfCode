@@ -45,12 +45,13 @@ public class Main {
         if (cardsWithBingo == null)
             System.out.println("No card won :/");
 
-        List<Integer> winingLine = cardsWithBingo.get(0).checkBingo(drawnNumbers);
-        System.out.println("CARD WON " + winingLine);
-        System.out.printf("Sum: %d\nLast call: %d\nTotalScore:%d",
-                winingLine.stream().mapToInt(Integer::intValue).sum(),
+        List<Integer> unmarkedNumbersOfWinning = cardsWithBingo.get(0).getUnmarkedNumber(drawnNumbers);
+        System.out.println("CARD WON " + unmarkedNumbersOfWinning);
+        System.out.printf("Sum: %d\nLast call: %d\nTotalScore: %d",
+                unmarkedNumbersOfWinning.stream().mapToInt(Integer::intValue).sum(),
                 drawnNumbers.get(drawnNumbers.size() - 1),
-                winingLine.stream().mapToInt(Integer::intValue).sum() * drawnNumbers.get(drawnNumbers.size() - 1)
+                unmarkedNumbersOfWinning.stream().mapToInt(Integer::intValue).sum()
+                        * drawnNumbers.get(drawnNumbers.size() - 1)
         );
 
     }
